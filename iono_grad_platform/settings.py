@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 #
-#import django
+import django
 from mongoengine import connect
 MONGO_DATABASE_NAME = 'streamdb'
 MONGO_HOST = '127.0.0.1'

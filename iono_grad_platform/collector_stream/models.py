@@ -28,3 +28,10 @@ class Post_stream(Document):
     author = ReferenceField(Device)
     data = DictField()
     
+class DataPost(object):
+    def __init__(self, dev_id, prof_id, dev_time, content):
+        self.dev_id = dev_id
+        self.prof_id = prof_id
+        self.dev_time = dev_time
+        self.rec_time = datetime.now()
+        self.content = content

@@ -20,5 +20,5 @@ from collector_stream import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^devices/', views.DeviceList.as_view()),
-    #url(r'^devices/(?P<id>[\w]{24})/$', views.Devic)
+    url(r'^post/', views.postdata)
 ]
