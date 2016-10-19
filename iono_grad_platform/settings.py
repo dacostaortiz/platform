@@ -11,14 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-#
 import django
-from mongoengine import connect
-MONGO_DATABASE_NAME = 'streamdb'
-MONGO_HOST = '127.0.0.1'
-MONGO_PORT = 27017
-connect(MONGO_DATABASE_NAME, host=MONGO_HOST, port=MONGO_PORT)
-#
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,10 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'mongoadmin',
-    #'mongoengine.django.mongo_auth',
     'rest_framework',
-    'rest_framework_mongoengine',
     'iono_grad_platform',
 ]
 
@@ -61,10 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-#
-#SESSION_ENGINE = 'mongoengine.django.sessions'
-#SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
-#
+
 ROOT_URLCONF = 'iono_grad_platform.urls'
 
 TEMPLATES = [
@@ -89,13 +77,9 @@ WSGI_APPLICATION = 'iono_grad_platform.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-#MONGOADMIN_OVERRIDE_ADMIN = True
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        #'ENGINE': 'django.db.backends.dummy',
-        #'NAME': os.path.join(BASE_DIR, 'streamdb'),
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
@@ -118,13 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-#
-#AUTHENTICATION_BACKENDS = ( 
-#           'mongoengine.django.auth.MongoEngineBackend',
-# )
-#AUTH_USER_MODEL = 'mongo_auth.MongoUser'
-#MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
-#
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
