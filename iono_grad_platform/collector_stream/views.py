@@ -9,29 +9,20 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime
 from storing import store_stream
-#from HttpRequest import *
-#from models import *
+import json
 
-#@csrf_exempt
 @api_view(['GET','POST'])
 def postdata(request):
-    print "request", request
-    print "method", request.method, "D:"
     if request.method == 'POST':
         #get data from the request and insert the record
-        print request.POST
-        print "antes err"
-        print "imprimiendo: ",request.POST.get('dev_id')
-        print "post err"
-        #dev_id = request.POST["dev_id"]
-        dev_id = request.POST.get("dev_id")
-        #prof_id = request.POST["prof_id"]
-        prof_id = request.POST.get("prof_id")
-        #dev_time = request.POST["dev_time"]
-        dev_time = request.POST.get("dev_time")
+        body = request.body
+        body = json.loads(body)
+        #print body
+        dev_id = body.get("dev_id")
+        prof_id = body.get("prof_id")
+        dev_time = body.get("dev_time")
         rec_time = str(datetime.now())
-        #content = request.POST["content"]
-        content = request.POST.get("content")
+        content = body.get("content")
         try:
 		    s = store_stream()
 		    s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content})
