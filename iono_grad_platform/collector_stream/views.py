@@ -16,18 +16,17 @@ def index(request):
 @api_view(['GET','POST'])
 def postdata(request):
     if request.method == 'POST':
-        #get data from the request and insert the record
-        body = request.body
-        body = json.loads(body)
+        #get data from the request
+        body = request.data
         #print body
         dev_id = body.get("dev_id")
         prof_id = body.get("prof_id")
         dev_time = body.get("dev_time")
         rec_time = str(datetime.now())
         content = body.get("content")
-        try:
-		    s = store_stream()
-		    s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content})
+        try: #insert data on the mongo database
+	    s = store_stream()
+	    s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content})
         except:
             return Response({ "ok": "false" })
         return Response({ "ok": "true" })
