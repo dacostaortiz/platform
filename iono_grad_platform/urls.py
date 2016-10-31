@@ -20,5 +20,6 @@ from collector_stream import views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
-    url(r'^post/', views.postdata)
+    url(r'^post/', views.postdata),
+    url(r'^prof/', views.sendProfile)
 ]

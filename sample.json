@@ -1,9 +1,9 @@
 { 
     "dev_id" : "00:93:DA:01:2F:30", 
     "prof_id" : "meteo",    
-    "dev_time" : "2016-10-22, 23:04:15",    
+    "dev_time" : "2016-10-30, 11:24:31",    
     "content" : {
-        "temperature" : "21.9",
-        "humidity" : "4.5",
-        "pressure" : "976"}
+        "TD" : "24.9",
+        "HR" : "5.2",
+        "PR" : "990"}
 }
