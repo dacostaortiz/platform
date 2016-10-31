@@ -55,6 +55,5 @@ $ mongo
 > use streamdb
 > show collections
 > db.post.find()
-{ "_id" : ObjectId("5807403d0e2a290e7b94f950"), "dev_id" : "00:93:DA:01:2F:30", "dev_time" : "12 oct 2016, 21:24", "rec_time" : "2016-10-19 09:43:25.843574", "prof_id" : "meteo", "content" : { "pressure" : "965", "temperature" : "23.2", "humidity" : "5.1" } }
+{ "_id" : ObjectId("5807403d0e2a290e7b94f950"), "dev_id" : "00:93:DA:01:2F:30", "dev_time" : "12 oct 2016, 21:24", "rec_time" : "2016-10-19 09:43:25.843574", "prof_id" : "meteo", "content" : { "PR" : "965", "TD" : "23.2", "HR" : "5.1" } }
 ```
-
