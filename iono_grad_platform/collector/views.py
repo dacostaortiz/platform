@@ -37,22 +37,24 @@ def sendData(request):
         if prof_id in prof_names:
             idx = prof_names.index(prof_id)
             cont_fields = content.keys()
-            #print cont_fields
             fields = profiles[idx].get("fields")
-            #print fields
             if set(cont_fields).intersection(fields) == set(fields):
                 chk = 1 #"satisfied"
             else:
                 chk = 0 #"not satisfied"
         else:
-            chk = 2 #"profile doesn't exist"
-        
-        try: #insert data on the mongo database
-            s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content, "check": chk})
-        except:
-            if content is None:
-                print "not content dict, please check this field" #this message could be sent to a log error file.
-            return Response({ "ok": "false" })
+            chk = 2 #"profile doesn't exist"	
+            		
+        if dev_id is not None:
+			try: #insert data on the mongo database
+				s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content, "check": chk})
+			except:
+				if content is None:
+				    print "not content dict, please check this field" #this message could be sent to a log error file.
+				return Response({ "ok": "false" })
+        else:
+			print "No device id"
+			return Response({ "ok": "false" })
         return Response({ "ok": "true" })
 
     if request.method == 'GET':
