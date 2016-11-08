@@ -26,3 +26,9 @@ class storing():
     def insert_device(self, device):
         insert = db.device.insert_one(device)
         print "Device inserted at: ", insert.inserted_id
+
+    def load_devices(self):
+        devices = []
+        for d in db.device.find():
+            devices.append(d)
+        return devices

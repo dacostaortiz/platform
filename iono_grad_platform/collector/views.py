@@ -17,7 +17,7 @@ prof_names = []
 prof_idx = []
 for idx, p in enumerate(profiles):
     prof_idx.append(idx)   
-    prof_names.append(p.get("prof_id")) #lista de nombres identificadores de perfile
+    prof_names.append(p.get("prof_id")) #lista de nombres identificadores de perfiles
 
 
 def index(request):
@@ -44,7 +44,6 @@ def sendData(request):
                 chk = 0 #"not satisfied"
         else:
             chk = 2 #"profile doesn't exist"	
-            		
         if dev_id is not None:
 			try: #insert data on the mongo database
 				s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content, "check": chk})
@@ -68,8 +67,16 @@ def sendProfile(request):
         prof_id = body.get("prof_id")
         fields  = body.get("fields")
         desc    = body.get("description")
+        if prof_id in prof_names:
+			print "this profile already exists"
+			return Response({"ok":"false"})
         try:
-            s.insert_profile({"prof_id": prof_id, "fields": fields, "description": desc})
+            p = {"prof_id": prof_id, "fields": fields, "description": desc}
+            s.insert_profile(p)
+            profiles.append(p) 
+            idx = max(prof_idx)
+            prof_idx.append(int(idx)+1)
+            prof_names.append(prof_id)
         except:
             return Response({ "ok": "false" })
         return Response({ "ok": "true" })
@@ -80,7 +87,6 @@ def sendDevices(request):
         body = request.data
         dev_id = body.get("dev_id")
         group_id = body.get("group_id")
-        
         try:
             s.insert_device({"dev_id": dev_id, "group_id": group_id})
         except:

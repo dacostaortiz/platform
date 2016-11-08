@@ -1,5 +1,5 @@
 { 
-    "prof_id" : "meteo",    
-    "fields" : ["PR","TD","HR"],    
+    "prof_id" : "bus",    
+    "fields" : ["lat","lon","alt"],    
     "description" : "This profile represents a device with weather sensors that gathers the following meteorological data: PR -> Pressure (mbar), TD -> Temperature (c°), HR -> Relative Humidity (percent)"
 } 
