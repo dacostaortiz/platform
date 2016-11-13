@@ -20,6 +20,7 @@ from collector import views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
-    url(r'^data/', views.sendData),
-    url(r'^prof/', views.sendProfile)
+    url(r'^data/',  views.sendData),
+    url(r'^prof/',  views.sendProfile),
+    url(r'^dev/',   views.sendDevice)  
 ]

@@ -17,7 +17,7 @@ prof_names = []
 prof_idx = []
 for idx, p in enumerate(profiles):
     prof_idx.append(idx)   
-    prof_names.append(p.get("prof_id")) #lista de nombres identificadores de perfiles
+    prof_names.append(p.get("prof_id")) #list of names of the profiles' id
 
 
 def index(request):
@@ -25,10 +25,8 @@ def index(request):
 
 @api_view(['GET','POST'])
 def sendData(request):   
-    if request.method == 'POST':
-        #get data from the request
+    if request.method == 'POST': #get data from the request
         body = request.data
-        #print body
         dev_id = body.get("dev_id")
         prof_id = body.get("prof_id")
         dev_time = body.get("dev_time")
@@ -43,17 +41,17 @@ def sendData(request):
             else:
                 chk = 0 #"not satisfied"
         else:
-            chk = 2 #"profile doesn't exist"	
+            chk = 2 #"profile doesn't exist"
         if dev_id is not None:
-			try: #insert data on the mongo database
-				s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content, "check": chk})
-			except:
-				if content is None:
-				    print "not content dict, please check this field" #this message could be sent to a log error file.
-				return Response({ "ok": "false" })
+            try: #insert data on the mongo database
+                s.insert_data({"dev_id": dev_id, "prof_id": prof_id, "dev_time": dev_time, "rec_time": rec_time, "content": content, "check": chk})
+            except:
+                if content is None:
+                    print "not content dict, please check this field" #this message could be sent to a log error file.
+                return Response({ "ok": "false" })
         else:
-			print "No device id"
-			return Response({ "ok": "false" })
+            print "No device id"
+            return Response({ "ok": "false" })
         return Response({ "ok": "true" })
 
     if request.method == 'GET':
@@ -63,13 +61,12 @@ def sendData(request):
 def sendProfile(request):
     if request.method == 'POST':
         body = request.data
-        #print body
         prof_id = body.get("prof_id")
         fields  = body.get("fields")
         desc    = body.get("description")
         if prof_id in prof_names:
-			print "this profile already exists"
-			return Response({"ok":"false"})
+            print "this profile already exists"
+            return Response({"ok":"false"})
         try:
             p = {"prof_id": prof_id, "fields": fields, "description": desc}
             s.insert_profile(p)
@@ -82,13 +79,15 @@ def sendProfile(request):
         return Response({ "ok": "true" })
 
 @api_view(['GET','POST'])
-def sendDevices(request):
+def sendDevice(request):
     if request.method == 'POST':
         body = request.data
         dev_id = body.get("dev_id")
-        group_id = body.get("group_id")
+        dev_time = body.get("dev_time")
+        rec_time = str(datetime.now())
+        info = body.get("info")
         try:
-            s.insert_device({"dev_id": dev_id, "group_id": group_id})
+            s.insert_device({"dev_id": dev_id, "dev_time": dev_time, "rec_time": rec_time, "info": info})
         except:
             return Response({ "ok": "false" })
-        return Response({ "ok" : "false" })
+        return Response({ "ok" : "true" })
