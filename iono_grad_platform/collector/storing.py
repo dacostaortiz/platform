@@ -2,11 +2,11 @@ from pymongo import MongoClient
 
 #connects to mongodb
 client = MongoClient()
-#store data at database called "streamdb"
-db = client.streamdb
+#store data at database called "test"
+db = client.test
 
 class storing():
-	
+
     def insert_data(self,data):
         #insert data into a collection called "data"
         insert = db.data.insert_one(data)
@@ -24,6 +24,7 @@ class storing():
         return profiles
 
     def insert_device(self, device):
+        #insert data into a collection called "device"
         insert = db.device.insert_one(device)
         print "Device inserted at: ", insert.inserted_id
 

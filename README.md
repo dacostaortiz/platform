@@ -10,7 +10,6 @@ On this repository relies the source code of the platform for ionospherical grad
 * Mongodb     >=  3.2
 * Django      >=  1.8
 * djangorestframework >=  2.0 
-* ~~mongoengine >=  0.9~~
 * PyMongo     >=  3.0
 
 ## Installation
@@ -42,11 +41,11 @@ $ source env/bin/activate
 $ python manage.py runserver
 ```
 
-Now we can post our data to the following url "localhost:8000/post/"
+Now we can post our data to the following url "localhost:8000/data/"
 For example, let's post a sample json file of a remote station.
 Using httpie:
 ```bash
-http POST localhost:8000/post/ < sample.json    
+http POST localhost:8000/data/ < sample.json    
 ```
 Let's check the posted data.
 ```bash
@@ -54,6 +53,6 @@ $ mongo
 > show databases
 > use streamdb
 > show collections
-> db.post.find()
-{ "_id" : ObjectId("5807403d0e2a290e7b94f950"), "dev_id" : "00:93:DA:01:2F:30", "dev_time" : "12 oct 2016, 21:24", "rec_time" : "2016-10-19 09:43:25.843574", "prof_id" : "meteo", "content" : { "PR" : "965", "TD" : "23.2", "HR" : "5.1" } }
+> db.data.find()
+{ "_id" : ObjectId("5807403d0e2a290e7b94f950"), "dev_id" : "00:93:DA:01:2F:30", "dev_time" : "2016-10-19 09:43:25.843574", "rec_time" : "2016-11-11 10:15:42.857498", "prof_id" : "meteo", "content" : { "PR" : "965", "TD" : "23.2", "HR" : "5.1" } }
 ```

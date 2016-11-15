@@ -6,13 +6,11 @@ from datetime import datetime
 #In order to perform our test we can retreive data directly from the database 
 #or get it from the script.
 try: 
-    sys.path.insert(0, '../iono_grad_platform/collector/')
+    sys.path.insert(0, '../collector/')
     from storing import storing
-    #puede estar conectado a la base de datos o pueden definirse unas listas y/o diccionarios de pruebas
     s = storing() #connects to database
     profiles = s.load_profiles()
     devices = s.load_devices()
-    
 except:
     profiles = [
     {"prof_id":"meteo",
@@ -33,14 +31,13 @@ except:
         +"in to retreive the number of sats in view during its fly. The retrieved data "
         +"corresponds to: lat -> latitude, lon -> longitude, alt -> altitude "
         +"(meters above the geoid), nsats -> number of satellites in view."}]
-    
     devices  = []
 
-prof_names = []
+prof_ids = []
 prof_idx = []
 for idx, p in enumerate(profiles):
     prof_idx.append(idx)   
-    prof_names.append(p.get("prof_id"))
+    prof_ids.append(p.get("prof_id"))
 
 dev_ids = []
 dev_idx = []
@@ -51,8 +48,12 @@ groups = ["UIS","Metrolinea"]
 
 class simulate():
     
-    def simu_cont(self,fields):
-        content={}
+    def simu_cont(self,fields,content=None,chk=None):
+        if content is None:
+            content={}
+        if (chk == 0) and fields != []:
+            random.shuffle(fields)
+            fields.pop()
         for f in fields:
             if f == "TD":
                 TD = random.uniform(18,30)
@@ -72,34 +73,51 @@ class simulate():
             elif f == "lat":
                 lat = 7.1490436
                 content.update({"lat":lat})
+            elif f == "nsats":
+                nsats = random.randint(4,15)
+                content.update({"nsats":nsats})
         return content
     
 
     def simu_data(self, data):
         self.p = None
+        self.chk = None
         if data.get("dev_id") is None:
             #gets a device retrieved from the db
             d = random.choice(dev_ids) 
             data.update({"dev_id": d})
         
         if data.get("prof_id") is None:
-            if random.random() <= 0.7:
-                self.p = random.choice(prof_names)
+            if random.random() <= 0.0:
+                self.p = random.choice(prof_ids)
                 data.update({"prof_id": self.p})
             else: 
                 data.update({"prof_id":None})
-        
+        else:
+            self.p = data.get("prof_id")
+            
         if data.get("dev_time") is None:
             t = str(datetime.now())
             data.update({"dev_time": t})
-        
+        chk=data.get("check")
         if data.get("content") is None:
-            if self.p in prof_names:
-                idx = prof_names.index(self.p)
+            if self.p in prof_ids:
+                idx = prof_ids.index(self.p)
                 fields = profiles[idx].get("fields")
-                c = self.simu_cont(fields)
-            else: 
-                c = self.simu_cont(profiles[0].get("fields"))
+                c = self.simu_cont(fields,{},chk)
+            else:
+                c = self.simu_cont([])
+            data.update({"content": c })
+        else:
+            c = data.get("content")
+            ck = c.keys() #content keys (fields)
+            if self.p in prof_ids:
+                idx = prof_ids.index(self.p)
+                fields = profiles[idx].get("fields")
+                ck = list(set(fields) | set(ck))
+                c = self.simu_cont(ck,c,chk)
+            else:
+                c = self.simu_cont(ck,c)
             data.update({"content": c})
         r = str(datetime.now())
         data.update({"rec_time": r})

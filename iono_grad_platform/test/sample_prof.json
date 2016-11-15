@@ -1,5 +1,5 @@
-{ 
-    "prof_id" : "bus",    
-    "fields" : ["lat","lon","alt"],    
-    "description" : "This profile represents a device with weather sensors that gathers the following meteorological data: PR -> Pressure (mbar), TD -> Temperature (c°), HR -> Relative Humidity (percent)"
-} 
+{
+    "prof_id":"drone",
+    "fields":["lat","lon","alt", "nsats"],
+    "description":"This profile represents a device that is flying on a drone, this device is calculating its spacial position and also we are interested in to retreive the number of sats in view during its fly. The retrieved data corresponds to: lat -> latitude, lon -> longitude, alt -> altitude (meters above the geoid), nsats -> number of satellites in view."
+}

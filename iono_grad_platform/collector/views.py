@@ -13,11 +13,11 @@ from django.http import HttpResponse
 s = storing() #connects to database
 profiles = s.load_profiles()
 
-prof_names = []
+prof_ids = []
 prof_idx = []
 for idx, p in enumerate(profiles):
     prof_idx.append(idx)   
-    prof_names.append(p.get("prof_id")) #list of names of the profiles' id
+    prof_ids.append(p.get("prof_id")) #list of names of the profiles' id
 
 
 def index(request):
@@ -32,8 +32,8 @@ def sendData(request):
         dev_time = body.get("dev_time")
         rec_time = str(datetime.now())
         content = body.get("content")
-        if prof_id in prof_names:
-            idx = prof_names.index(prof_id)
+        if prof_id in prof_ids:
+            idx = prof_ids.index(prof_id)
             cont_fields = content.keys()
             fields = profiles[idx].get("fields")
             if set(cont_fields).intersection(fields) == set(fields):
@@ -64,7 +64,7 @@ def sendProfile(request):
         prof_id = body.get("prof_id")
         fields  = body.get("fields")
         desc    = body.get("description")
-        if prof_id in prof_names:
+        if prof_id in prof_ids:
             print "this profile already exists"
             return Response({"ok":"false"})
         try:
@@ -72,8 +72,11 @@ def sendProfile(request):
             s.insert_profile(p)
             profiles.append(p) 
             idx = max(prof_idx)
+            print "idx", idx, prof_idx
             prof_idx.append(int(idx)+1)
-            prof_names.append(prof_id)
+            print "lel", prof_idx
+            prof_ids.append(prof_id)
+            print prof_ids
         except:
             return Response({ "ok": "false" })
         return Response({ "ok": "true" })
