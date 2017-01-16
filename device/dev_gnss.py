@@ -1,8 +1,9 @@
 from datetime import datetime
 import serial
 import pynmea2
+import json
 
-class gnss_nmea():
+class nv08c_nmea():
     def read_serial(self, port, brate=115200):
         ser = None
         reader = pynmea2.NMEAStreamReader()
@@ -13,7 +14,7 @@ class gnss_nmea():
                 print('could not connect to %s' % port)
                 time.sleep(5.0)
 
-        dat = ser.read(128) #reads up to 128 bytes of data (timeout)
+        dat = ser.read(128) #reads up to 96 bytes of data (timeout)
         for msg in reader.next(dat):
             if isinstance(msg, pynmea2.types.talker.GGA): #extract data from sentence nmea GPGGA
                 #print msg
@@ -23,5 +24,6 @@ class gnss_nmea():
                 lat = msg.latitude
                 lon = msg.longitude
                 alt = msg.altitude
-        return t, str(lat), str(lon), alt
+                
+        return t, {"lat":str(lat),"lon":str(lon),"alt":alt}
 

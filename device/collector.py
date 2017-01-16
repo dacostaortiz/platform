@@ -1,4 +1,4 @@
-from dev_gnss import *
+import dev_gnss
 import time
 import uuid
 import ConfigParser
@@ -10,22 +10,28 @@ mac_num = hex(uuid.getnode()).replace('0x','')
 mac     = ':'.join(mac_num[i : i + 2] for i in range(0,11,2))
 
 #load configurations
-config  = ConfigParser.ConfigParser()
-config.readfp(open(r'device.cfg'))
-profile = config.get('Device Config', 'profile')
-gnss_port    = config.get('Device Config', 'gnss_dev')
+conf  = ConfigParser.ConfigParser()
+conf.readfp(open(r'device.cfg'))
+profile = conf.get('Device Config', 'profile')
+ip = conf.get('Device Config','remote_ip')
+port=conf.get('Device Config','remote_port')
+gnss_con = conf.get('GNSS', 'conn')
 
-
-gnss = gnss_nmea()         
+if gnss_con == 'yes':
+    g_model = conf.get('GNSS', 'model')
+    g_mode  = conf.get('GNSS', 'mode')
+    g_port  = conf.get('GNSS', 'port')
+    gnss    = getattr(dev_gnss, g_model+'_'+g_mode) 
+    g = gnss()         
 
 while 1:
-    t,lat,lon,alt = gnss.read_serial(gnss_port)
-    content = {"lat":lat,"lon":lon,"alt":alt}
+    t, content = g.read_serial(g_port)
+    #content = {"lat":lat,"lon":lon,"alt":alt}
     data = {"dev_id":mac,"prof_id":profile,"dev_time":t,"content":content}
     data = json.dumps(data)
     #print data
     c = pycurl.Curl()
-    c.setopt(pycurl.URL, '192.168.0.110:9050/data/') #configure remote ip address and port
+    c.setopt(pycurl.URL, str(ip)+':'+str(port)+'/data/')  #configure remote ip address and port
     c.setopt(pycurl.HTTPHEADER, [ 'Content-Type: application/json' , 'Accept: application/json'])
     c.setopt(pycurl.POST, 1)
     c.setopt(pycurl.POSTFIELDS, data)
