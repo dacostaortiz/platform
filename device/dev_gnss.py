@@ -4,7 +4,7 @@ import pynmea2
 import json
 
 class nv08c_nmea():
-    def read_serial(self, port, brate=115200):
+    def read(self, port, brate=115200):
         ser = None
         reader = pynmea2.NMEAStreamReader()
         if ser is None:
