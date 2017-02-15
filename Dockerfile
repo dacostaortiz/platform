@@ -17,8 +17,7 @@ RUN pip install django djangorestframework pymongo
 WORKDIR /workspace
 RUN mkdir -p /data/db
 EXPOSE 27017
-#ENTRYPOINT ["/usr/bin/mongod"]
 RUN git clone https://github.com/dacostaortiz/platform.git
 WORKDIR /workspace/platform
+COPY config.cfg .
 COPY run.sh .
-

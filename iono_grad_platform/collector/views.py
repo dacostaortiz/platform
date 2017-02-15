@@ -9,6 +9,7 @@ from datetime import datetime
 from storing import storing
 import json
 from django.http import HttpResponse
+from forms import UploadBatchForm
 
 s = storing() #connects to database
 profiles = s.load_profiles()
@@ -21,7 +22,7 @@ for idx, p in enumerate(profiles):
 
 
 def index(request):
-    return HttpResponse('<h1>Welcome</h1> Now the server is running. Please post your data to "localhost:8000/post/".')
+    return HttpResponse('<h1>Welcome</h1> Now the server is running. Please post your data to "http://cagepocs.sc3.uis.edu.co:8088/data/".')
 
 @api_view(['GET','POST'])
 def sendData(request):   
@@ -94,3 +95,27 @@ def sendDevice(request):
         except:
             return Response({ "ok": "false" })
         return Response({ "ok" : "true" })
+        
+@api_view(['POST'])
+def sendBatch(request):
+	if request.method == 'POST':
+		print request.POST
+		print request.FILES
+		form = UploadBatchForm(request.POST,request.FILES)
+		if form.is_valid():
+			print "file received"
+			dev_id = request.POST.get("dev_id")
+			prof_id = request.POST.get("profile")
+			dev_time = request.POST.get("dev_time")
+			rec_time = str(datetime.now())
+			chksum_rec = request.POST.get("chksum")
+			chksum_cal = s.handle_file(request.FILES['raw'],dev_id)
+			s.insert_batch({"dev_id": dev_id, "prof_id": prof_id, 
+			"dev_time": dev_time, "rec_time": rec_time, "checksum": chksum_rec})
+			if chksum_rec == chksum_cal:
+				return Response({"ok":"true"})
+			else:
+				return Response({"ok":"not valid checksum"})
+		else:
+			print "form no valid"
+			return Response({"ok":"false"})

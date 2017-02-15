@@ -1,9 +1,17 @@
 from pymongo import MongoClient
+from checksum import checksum
+import ConfigParser
 
+conf = ConfigParser.ConfigParser()
+conf.readfp(open(r'config.cfg'))
+ip		= conf.get('Mongo', 'ip')
+port	= conf.get('Mongo', 'port')
+name	= conf.get('Mongo', 'name')
+route	= conf.get('Mongo', 'route')
 #connects to mongodb
-client = MongoClient()
+client = MongoClient(host=[str(ip)+':'+str(port)])
 #store data at database called "test"
-db = client.test
+db = client[name]
 
 class storing():
 
@@ -33,3 +41,16 @@ class storing():
         for d in db.device.find():
             devices.append(d)
         return devices
+        
+    def insert_batch(self, meta):
+		#inserts the metadata related to each uploaded file in batch mode
+		insert = db.meta.insert_one(meta)
+		print "Metadata inserted at: ", insert.inserted_id
+
+    def handle_file(self,f,dev_id):
+        with open(route+f.name, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+                destination.close()
+        chksum = checksum(route+f.name)
+        return chksum

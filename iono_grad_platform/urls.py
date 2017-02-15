@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^data/',  views.sendData),
     url(r'^prof/',  views.sendProfile),
-    url(r'^dev/',   views.sendDevice)  
+    url(r'^dev/',   views.sendDevice),
+    url(r'^batch/', views.sendBatch)
 ]
