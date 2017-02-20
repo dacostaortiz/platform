@@ -99,8 +99,8 @@ def sendDevice(request):
 @api_view(['POST'])
 def sendBatch(request):
 	if request.method == 'POST':
-		print request.POST
-		print request.FILES
+		#print request.POST
+		#print request.FILES
 		form = UploadBatchForm(request.POST,request.FILES)
 		if form.is_valid():
 			print "file received"
@@ -108,9 +108,10 @@ def sendBatch(request):
 			prof_id = request.POST.get("profile")
 			dev_time = request.POST.get("dev_time")
 			rec_time = str(datetime.now())
+			filename = request.POST.get("filename")
 			chksum_rec = request.POST.get("chksum")
 			chksum_cal = s.handle_file(request.FILES['raw'],dev_id)
-			s.insert_batch({"dev_id": dev_id, "prof_id": prof_id, 
+			s.insert_batch({"filename":filename,"dev_id": dev_id, "prof_id": prof_id, 
 			"dev_time": dev_time, "rec_time": rec_time, "checksum": chksum_rec})
 			if chksum_rec == chksum_cal:
 				return Response({"ok":"true"})
