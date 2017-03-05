@@ -1,9 +1,6 @@
-import dev_gnss, dev_sensor
-import time
-import uuid
-import ConfigParser
-import pycurl
-import json
+from datetime import datetime
+import time, uuid, ConfigParser, pycurl, json, ast
+import sensor
 
 #device id must to be unique, we could use mac as id
 mac_num = hex(uuid.getnode()).replace('0x','')
@@ -11,31 +8,31 @@ mac     = ':'.join(mac_num[i : i + 2] for i in range(0,11,2))
 
 #load configurations
 conf  = ConfigParser.ConfigParser()
-conf.readfp(open(r'device.cfg'))
-profile = conf.get('Device Config', 'profile')
-ip = conf.get('Device Config','remote_ip')
-port=conf.get('Device Config','remote_port')
-send_freq = conf.get('Device Config', 'send_freq')
-gnss_con = conf.get('GNSS', 'conn')
-sensor_con = conf.get('Sensor','conn')
+conf.read('nrt.cfg')
+dev_conf    = conf._sections["Device Config"]
+profile     = dev_conf["profile"]
+ip          = dev_conf["remote_ip"]
+port        = dev_conf["remote_port"]
+send_freq   = dev_conf["send_freq"]
+num_sensors = dev_conf["num_sensors"]
 
-if gnss_con == 'yes':
-    g_model = conf.get('GNSS', 'model')
-    g_mode  = conf.get('GNSS', 'mode')
-    g_port  = conf.get('GNSS', 'port')
-    gnss    = getattr(dev_gnss, g_model+'_'+g_mode) 
-    g = gnss()         
-if sensor_con == 'yes':
-    s_model = conf.get('Sensor','model')
-    s_mode  = conf.get('Sensor','mode')
-    sensor = getattr(dev_sensor, s_model+'_'+s_mode)
-    s = sensor()
+#load sensors' drivers
+sensors = []
+for i in range(int(num_sensors)):
+    s_conf = conf._sections["Sensor"+str(i+1)]
+    model   = s_conf["model"]
+    mode    = s_conf["mode"]
+    init    = ast.literal_eval(s_conf["init"])
+    s_driver = getattr(sensor, model+'_'+mode)
+    sensors.append(s_driver(**init))
+
+print sensors
+
 while 1:
     content = {}
-    t, gcont = g.read(g_port)
-    content.update(gcont)
-    scont = s.read()
-    content.update(scont)
+    for s in sensors:
+        content.update(s.read())
+    t = str(datetime.now())
     data = {"dev_id":mac,"prof_id":profile,"dev_time":t,"content":content}
     data = json.dumps(data)
     #print data
