@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	git \
 	vim \
 	build-essential 
-RUN pip install --upgrade pip
+RUN pip install -U pip
 RUN pip install django djangorestframework pymongo
 WORKDIR /workspace
 RUN mkdir -p /data/db
