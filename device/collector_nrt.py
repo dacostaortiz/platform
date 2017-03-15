@@ -1,6 +1,8 @@
 from datetime import datetime
-import time, uuid, ConfigParser, pycurl, json, ast
-import sensor
+from importlib import import_module as imp
+import time, uuid, ConfigParser, pycurl, json, ast, sys, importlib
+#import sensor
+sys.path.insert(0,'./sensors/')
 
 #device id must to be unique, we could use mac as id
 mac_num = hex(uuid.getnode()).replace('0x','')
@@ -19,12 +21,11 @@ num_sensors = dev_conf["num_sensors"]
 #load sensors' drivers
 sensors = []
 for i in range(int(num_sensors)):
-    s_conf = conf._sections["Sensor"+str(i+1)]
+    s_conf  = conf._sections["Sensor"+str(i+1)]
     model   = s_conf["model"]
     mode    = s_conf["mode"]
     init    = ast.literal_eval(s_conf["init"])
-    s_driver = getattr(sensor, model+'_'+mode)
-    sensors.append(s_driver(**init))
+    sensors.append(getattr(imp(model),mode)(**init))
 
 print sensors
 
