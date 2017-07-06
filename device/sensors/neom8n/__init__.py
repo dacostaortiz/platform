@@ -15,7 +15,7 @@ class nrt():
             except serial.SerialException:
                 print('could not connect to %s' % port)
                 time.sleep(5.0)
-        dat = ser.read(256) #reads up to n bytes of data streamed to the port
+        dat = ser.read(192) #reads up to n bytes of data streamed to the port
         for msg in reader.next(dat):
             #print type(msg)
             if isinstance(msg, pynmea2.types.talker.GGA): #extract data from sentence nmea GPGGA
@@ -24,5 +24,6 @@ class nrt():
                 lat = msg.latitude
                 lon = msg.longitude
                 alt = msg.altitude
+                print lat, lon
                 return {"lat":str(lat),"lon":str(lon),"alt":alt, "t":t}
         return {}
