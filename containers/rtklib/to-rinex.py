@@ -11,7 +11,7 @@ rinex_ver = conf["rinex_ver"]
 format_type = conf["format"]
 meta = conf["meta"]
 
-inp = path+"UIS01_78\:4b\:87\:a5\:9a\:ef/gnss/2017/130/" #temp testing path, function must be updated
+inp = path+"UIS01_78\:4b\:87\:a5\:9a\:ef/gnss/2017/130/" #temp testing  path, function must be updated
 out = inp+"rinex"
 files = os.listdir(inp)
 for f in files:
